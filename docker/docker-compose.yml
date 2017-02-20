@@ -1,0 +1,60 @@
+zookeeper:
+  image: wurstmeister/zookeeper
+  hostname: zookeeper
+  container_name: zookeeper
+  ports:
+   - "2181:2181"
+
+kafka:
+  image: wurstmeister/kafka
+  container_name: kafka
+  hostname: kafka
+  links:
+    - zookeeper:zk
+  environment:
+    KAFKA_ADVERTISED_HOST_NAME: 192.168.99.100
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+  ports:
+    - "9092:9092"
+
+elasticsearch:
+   image: elasticsearch
+   container_name: elasticsearch
+   hostname: elasticsearch
+   ports:
+    - "9200:9200"
+    - "9300:9300"
+
+kafka-connect:
+  image: kafka-connect
+  container_name: kafka-connect
+  hostname: kafka-connect
+  ports:
+   - "8160:8160"
+  environment:
+    KAFKA_CONNECT_MODE: distributed
+    KAFKA_ADDRESS: 192.168.99.100
+    ZOOKEEPER_ADDRESS: 192.168.99.100
+    ELASTICSEARCH_ADDRESS: 192.168.99.100
+    ELASTICSEARCH_INDEX: vimond-numbers
+    REST_API_ADDRESS: https://vimond-rest-api.ha.dev.vops.io
+    ELASTICSEARCH_TEMPLATES: vimond-numbers-template
+    KAFKA_TOPICS: asset-playback
+    MAX_TASKS: 1
+
+kafka-connect1:
+  image: kafka-connect1
+  container_name: kafka-connect1
+  hostname: kafka-connect1
+  ports:
+   - "8161:8161"
+  environment:
+    KAFKA_CONNECT_MODE: distributed
+    KAFKA_ADDRESS: 192.168.99.100
+    ZOOKEEPER_ADDRESS: 192.168.99.100
+    ELASTICSEARCH_ADDRESS: 192.168.99.100
+    ELASTICSEARCH_INDEX: vimond-numbers
+    ELASTICSEARCH_TYPES: user-asset_playback-event,order-domain-event,user-domain-event
+    REST_API_ADDRESS: https://vimond-rest-api.ha.dev.vops.io
+    KAFKA_TOPICS: asset-playback
