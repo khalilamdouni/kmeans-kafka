@@ -6,8 +6,15 @@
 	<artifactId>KappaKmeans</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-
 	<name>Kappa Kmeans</name>
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.1.RELEASE</version>
+	</parent>
 	<modules>
 		<module>KmeansLloyd</module>
 		<module>KmeansPP</module>
